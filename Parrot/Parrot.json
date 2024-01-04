@@ -2,7 +2,7 @@
     "Author": "Exa",
     "Name": "Parrot",
     "Punchline": "Parrots chat channel to twitch",
-    "Description": "/parrot opens config.",
+    "Description": "/parrot opens main window.",
     "InternalName": "Parrot",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/exa-ffxiv/parrot",

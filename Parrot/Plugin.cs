@@ -4,7 +4,8 @@ using Dalamud.Plugin;
 using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
-using Parrot.Windows;
+using Parrot.App.Common;
+using Parrot.App;
 
 namespace Parrot
 {
@@ -17,53 +18,48 @@ namespace Parrot
         private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("Parrot");
+        public IChatGui chatGui { get; init; }
 
-        private ConfigWindow ConfigWindow { get; init; }
-        private MainWindow MainWindow { get; init; }
+        private ParrotApp app { get; init; }
 
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-            [RequiredVersion("1.0")] ICommandManager commandManager)
+            [RequiredVersion("1.0")] ICommandManager commandManager,
+            [RequiredVersion("1.0")] IChatGui chatGui,
+            [RequiredVersion("1.0")] IPluginLog logger)
         {
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
+            this.chatGui = chatGui;
+            Logger.initialize(logger);
 
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
 
-            // you might normally want to embed resources and load them from the manifest stream
-            //var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
-            //var goatImage = this.PluginInterface.UiBuilder.LoadImage(imagePath);
-
-            ConfigWindow = new ConfigWindow(this);
-            MainWindow = new MainWindow(this);
-            
-            WindowSystem.AddWindow(ConfigWindow);
-            WindowSystem.AddWindow(MainWindow);
-
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "A useful message to display in /xlhelp"
+                HelpMessage = "Open the main Parrot window."
             });
 
             this.PluginInterface.UiBuilder.Draw += DrawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+            this.PluginInterface.UiBuilder.OpenConfigUi += DrawPluginUI;
+
+            this.app = new ParrotApp(this);
+
+            WindowSystem.AddWindow(app.MainWindow);
+            WindowSystem.AddWindow(app.ConfigWindow);
         }
 
         public void Dispose()
         {
             this.WindowSystem.RemoveAllWindows();
             
-            ConfigWindow.Dispose();
-            MainWindow.Dispose();
-            
             this.CommandManager.RemoveHandler(CommandName);
         }
 
         private void OnCommand(string command, string args)
         {
-            // in response to the slash command, just display our main ui
-            MainWindow.IsOpen = true;
+            this.DrawPluginUI();
         }
 
         private void DrawUI()
@@ -71,9 +67,9 @@ namespace Parrot
             this.WindowSystem.Draw();
         }
 
-        public void DrawConfigUI()
+        public void DrawPluginUI()
         {
-            ConfigWindow.IsOpen = true;
+            app.DrawMainUI();
         }
     }
 }
