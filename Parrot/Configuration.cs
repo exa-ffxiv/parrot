@@ -16,6 +16,10 @@ namespace Parrot
 
         public XivChatType sourceChat {  get; set; } = XivChatType.None;
 
+        public string botAccountName { get; set; } = string.Empty;
+
+        public bool mainWindowRequired { get; set; } = true;
+
         // the below exist just to make saving less cumbersome
         [NonSerialized]
         private DalamudPluginInterface? PluginInterface;

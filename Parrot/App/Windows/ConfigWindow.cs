@@ -11,7 +11,7 @@ public class ConfigWindow : Window, IDisposable
     private Configuration configuration;
 
     public ConfigWindow(Plugin plugin) : base(
-        "A Wonderful Configuration Window",
+        "Parrot Configuration",
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
@@ -32,6 +32,22 @@ public class ConfigWindow : Window, IDisposable
             configuration.channelName = channelName;
             configuration.Save();
         }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip("Twitch channel to parrot to. Captilization doesn't matter.");
+        }
+
+        var botAccountName = configuration.botAccountName;
+        ImGui.SetNextItemWidth(150);
+        if (ImGui.InputText("Twitch Account Name", ref botAccountName, 99))
+        {
+            configuration.botAccountName = botAccountName;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip("Name of the twitch bot account.");
+        }
 
         var authToken = configuration.authToken;
         ImGui.SetNextItemWidth(150);
@@ -39,6 +55,10 @@ public class ConfigWindow : Window, IDisposable
         {
             configuration.authToken = authToken;
             configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip("Auth token to log into the twitch bot account.");
         }
 
         var sourceChat = configuration.sourceChat;
@@ -90,6 +110,21 @@ public class ConfigWindow : Window, IDisposable
                 configuration.sourceChat = XivChatType.CrossLinkShell8;
                 configuration.Save();
             }
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip("The FFXIV chat channel to parrot.");
+        }
+
+        var mainWindowRequired = configuration.mainWindowRequired;
+        if (ImGui.Checkbox("Main Window Required", ref mainWindowRequired))
+        {
+            configuration.mainWindowRequired = mainWindowRequired;
+            configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip("If enabled, closing the main window will disable parroting.");
         }
     }
 

@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
+using Parrot.App.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Parrot.App.Windows
 
         public MainWindow(Plugin plugin, ParrotApp app): base("Parrot", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
-            this.Size = new System.Numerics.Vector2(350, 100);
+            this.Size = new System.Numerics.Vector2(225, 100);
             this.SizeCondition = ImGuiCond.Appearing;
 
             this.plugin = plugin;
@@ -46,10 +47,7 @@ namespace Parrot.App.Windows
             };
         }
 
-        public void Dispose()
-        {
-            
-        }
+        public void Dispose() { }
 
         public override void Draw()
         {
@@ -58,11 +56,31 @@ namespace Parrot.App.Windows
 
             ImGui.SameLine();
             ImGui.PushStyleColor(ImGuiCol.Text, app.IsActive ? enabledColor : disabledColor);
-            if (ImGui.Button(app.IsActive ? "ENABLED" : "DISABLED"))
+            if (app.IsActive)
             {
-                app.IsActive = !app.IsActive;
+                if (ImGui.Button("ENABLED"))
+                {
+                    app.LogoutAndDisable();
+                }
+            }
+            else
+            {
+                if (ImGui.Button("DISABLED"))
+                {
+                    app.LoginAndEnable();
+                }
             }
             ImGui.PopStyleColor();
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+            if (plugin.Configuration.mainWindowRequired && app.IsActive)
+            {
+                Logger.Info("Closing mainWindow while required, disabling parroting.");
+                app.LogoutAndDisable();
+            }
         }
     }
 }
