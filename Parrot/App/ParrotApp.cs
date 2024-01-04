@@ -20,6 +20,7 @@ namespace Parrot.App
         public MainWindow? MainWindow { get; init; }
         public ConfigWindow? ConfigWindow { get; init; }
 
+        public bool IsActive { get; set; } = false;
 
         public ParrotApp(Plugin plugin)
         {
@@ -43,9 +44,15 @@ namespace Parrot.App
             chatGui.ChatMessage += ChatGui_ChatMessage;
         }
 
+        public void LoginAndEnable()
+        {
+
+        }
+
         private void ChatGui_ChatMessage(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
-            if (type == XivChatType.CrossLinkShell5)
+            if (!IsActive) return;
+            if (type == plugin.Configuration.sourceChat)
             {
                 Logger.Info("Got message: \"" + message.TextValue + "\"");
             }

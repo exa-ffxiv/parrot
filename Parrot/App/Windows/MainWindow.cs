@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
+using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,12 @@ namespace Parrot.App.Windows
         private Plugin plugin {  get; init; }
         private ParrotApp app { get; init; }
 
+        private Vector4 disabledColor = new Vector4(100, 0, 0, 1);
+        private Vector4 enabledColor = new Vector4(0, 100, 0, 1);
+
         public MainWindow(Plugin plugin, ParrotApp app): base("Parrot", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
-            this.Size = new System.Numerics.Vector2(400, 200);
+            this.Size = new System.Numerics.Vector2(350, 100);
             this.SizeCondition = ImGuiCond.Appearing;
 
             this.plugin = plugin;
@@ -31,7 +35,7 @@ namespace Parrot.App.Windows
                     {
                         app.DrawConfigUI();
                     },
-                    IconOffset = new(2,1),
+                    IconOffset = new(3,1),
                     ShowTooltip = () =>
                     {
                         ImGui.BeginTooltip();
@@ -49,7 +53,16 @@ namespace Parrot.App.Windows
 
         public override void Draw()
         {
-            ImGui.Text($"The random config bool is {this.plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
+            ImGui.Text($"Parroting '{plugin.Configuration.sourceChat}'");
+            ImGui.Text($" to '{plugin.Configuration.channelName}' is");
+
+            ImGui.SameLine();
+            ImGui.PushStyleColor(ImGuiCol.Text, app.IsActive ? enabledColor : disabledColor);
+            if (ImGui.Button(app.IsActive ? "ENABLED" : "DISABLED"))
+            {
+                app.IsActive = !app.IsActive;
+            }
+            ImGui.PopStyleColor();
         }
     }
 }

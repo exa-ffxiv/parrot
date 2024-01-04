@@ -1,4 +1,5 @@
-﻿using Dalamud.Configuration;
+using Dalamud.Configuration;
+using Dalamud.Game.Text;
 using Dalamud.Plugin;
 using System;
 
@@ -9,7 +10,11 @@ namespace Parrot
     {
         public int Version { get; set; } = 0;
 
-        public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
+        public string authToken { get; set; } = string.Empty;
+
+        public string channelName { get; set; } = string.Empty;
+
+        public XivChatType sourceChat {  get; set; } = XivChatType.None;
 
         // the below exist just to make saving less cumbersome
         [NonSerialized]
