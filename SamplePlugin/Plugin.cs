@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using System.IO;
@@ -32,11 +32,11 @@ namespace SamplePlugin
             this.Configuration.Initialize(this.PluginInterface);
 
             // you might normally want to embed resources and load them from the manifest stream
-            var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
-            var goatImage = this.PluginInterface.UiBuilder.LoadImage(imagePath);
+            //var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
+            //var goatImage = this.PluginInterface.UiBuilder.LoadImage(imagePath);
 
             ConfigWindow = new ConfigWindow(this);
-            MainWindow = new MainWindow(this, goatImage);
+            MainWindow = new MainWindow(this);
             
             WindowSystem.AddWindow(ConfigWindow);
             WindowSystem.AddWindow(MainWindow);
