@@ -1,0 +1,19 @@
+{
+    "Author": "Exa",
+    "Name": "Parrot",
+    "Punchline": "Parrots chat channel to twitch",
+    "Description": "/parrot opens config.",
+    "InternalName": "Parrot",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/exa-ffxiv/parrot",
+    "DalamudApiLevel": 9,
+    "IsHide": "False",
+    "IsTestingExclusive": "False",
+    "LoadPriority": 70484,
+    "LoadRequiredState": 2,
+    "LoadSync": true,
+    "Tags": [
+        "parrot",
+        "plugin"
+    ]
+}
