@@ -32,6 +32,8 @@ namespace Parrot.App
         StreamReader? reader = null;
         StreamWriter? writer = null;
 
+        Random rand = new Random();
+
         public ParrotApp(Plugin plugin)
         {
             if (plugin == null)
@@ -114,8 +116,16 @@ namespace Parrot.App
             if (type == plugin.Configuration.sourceChat)
             {
                 Logger.Debug("Got message: \"" + message.TextValue + "\"");
-                writer?.WriteLineAsync($"PRIVMSG #{plugin.Configuration.channelName} :{message.TextValue}");
+                var messageText = message.TextValue;
+                Task.Run(() => SendChatMessage(messageText));
+                //writer?.WriteLineAsync($"PRIVMSG #{plugin.Configuration.channelName} :{message.TextValue}");
             }
+        }
+
+        private async void SendChatMessage(String message)
+        {
+            await Task.Delay(rand.Next(plugin.Configuration.delayMin, plugin.Configuration.delayMax));
+            writer?.WriteLineAsync($"PRIVMSG #{plugin.Configuration.channelName} :{message}");
         }
 
         public void Dispose()

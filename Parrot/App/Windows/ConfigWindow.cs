@@ -15,7 +15,7 @@ public class ConfigWindow : Window, IDisposable
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
-        this.Size = new Vector2(300, 200);
+        this.Size = new Vector2(300, 275);
         this.SizeCondition = ImGuiCond.Always;
 
         this.configuration = plugin.Configuration;
@@ -125,6 +125,29 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.IsItemHovered())
         {
             ImGui.SetTooltip("If enabled, closing the main window will disable parroting.");
+        }
+
+        var delayEnabled = configuration.delayEnabled;
+        if (ImGui.Checkbox("Message Delay Enabled", ref delayEnabled))
+        {
+            configuration.delayEnabled = delayEnabled;
+            configuration.Save();
+        }
+        var delayMin = configuration.delayMin;
+        var delayMax = configuration.delayMax;
+        ImGui.SetNextItemWidth(100);
+        if (ImGui.InputInt("Minimum Delay ms", ref delayMin, 1000))
+        {
+            if (delayMin > configuration.delayMax) delayMin = configuration.delayMax;
+            configuration.delayMin = delayMin;
+            configuration.Save();
+        }
+        ImGui.SetNextItemWidth(100);
+        if (ImGui.InputInt("Maximum Delay ms", ref delayMax, 1000))
+        {
+            if (delayMax < configuration.delayMin) delayMax = configuration.delayMin;
+            configuration.delayMax = delayMax;
+            configuration.Save();
         }
     }
 

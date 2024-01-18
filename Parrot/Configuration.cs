@@ -20,6 +20,12 @@ namespace Parrot
 
         public bool mainWindowRequired { get; set; } = true;
 
+        public bool delayEnabled { get; set; } = true;
+
+        public int delayMin { get; set; } = 5000;
+
+        public int delayMax { get; set; } = 10000;
+
         // the below exist just to make saving less cumbersome
         [NonSerialized]
         private DalamudPluginInterface? PluginInterface;
