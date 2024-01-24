@@ -15,7 +15,7 @@ public class ConfigWindow : Window, IDisposable
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
-        this.Size = new Vector2(300, 275);
+        this.Size = new Vector2(300, 300);
         this.SizeCondition = ImGuiCond.Always;
 
         this.configuration = plugin.Configuration;
@@ -147,6 +147,22 @@ public class ConfigWindow : Window, IDisposable
         {
             if (delayMax < configuration.delayMin) delayMax = configuration.delayMin;
             configuration.delayMax = delayMax;
+            configuration.Save();
+        }
+
+        ImGui.Text("Required Prefix");
+        var prefixEnabled = configuration.prefixEnabled;
+        if (ImGui.Checkbox("###Prefix Enabled", ref prefixEnabled))
+        {
+            configuration.prefixEnabled = prefixEnabled;
+            configuration.Save();
+        }
+
+        ImGui.SameLine();
+        var prefix = configuration.prefix;
+        if (ImGui.InputText("###Prefix", ref prefix, 50))
+        {
+            configuration.prefix = prefix;
             configuration.Save();
         }
     }

@@ -26,6 +26,10 @@ namespace Parrot
 
         public int delayMax { get; set; } = 10000;
 
+        public bool prefixEnabled { get; set; } = false;
+
+        public string prefix { get; set; } = string.Empty;
+
         // the below exist just to make saving less cumbersome
         [NonSerialized]
         private DalamudPluginInterface? PluginInterface;

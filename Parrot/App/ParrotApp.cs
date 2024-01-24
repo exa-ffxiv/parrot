@@ -115,10 +115,21 @@ namespace Parrot.App
             if (!IsActive) return;
             if (type == plugin.Configuration.sourceChat)
             {
-                Logger.Debug("Got message: \"" + message.TextValue + "\"");
                 var messageText = message.TextValue;
+                Logger.Debug("Got message: \"" + messageText + "\"");
+                if (plugin.Configuration.prefixEnabled)
+                {
+                    if (messageText.StartsWith(plugin.Configuration.prefix))
+                    {
+                        messageText = messageText.Replace(plugin.Configuration.prefix, string.Empty).Trim();
+                    }
+                    else
+                    {
+                        Logger.Debug("Prefix required. Message did not start with \"" + plugin.Configuration.prefix + "\"");
+                        return;
+                    }
+                }
                 Task.Run(() => SendChatMessage(messageText));
-                //writer?.WriteLineAsync($"PRIVMSG #{plugin.Configuration.channelName} :{message.TextValue}");
             }
         }
 
